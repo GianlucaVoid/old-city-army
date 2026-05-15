@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+// Punta al backend in produzione, in locale usa il proxy
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || '';
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser]       = useState(null);
-  const [token, setToken]     = useState(localStorage.getItem('oca_token'));
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('oca_token'));
   const [loading, setLoading] = useState(true);
 
   // Imposta header axios globale

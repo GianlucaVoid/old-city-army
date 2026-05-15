@@ -6,9 +6,10 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? 'https://tuodominio.com'
-    : 'http://localhost:3000',
+  origin: [
+    'https://old-city-army.vercel.app',
+    'http://localhost:3000',
+  ],
   credentials: true,
 }));
 app.use(express.json());

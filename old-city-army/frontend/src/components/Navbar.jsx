@@ -7,8 +7,8 @@ import './Navbar.css';
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [scrolled,  setScrolled]  = useState(false);
-  const [menuOpen,  setMenuOpen]  = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -17,6 +17,7 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => { logout(); navigate('/'); };
+  const isAdmin = user?.ruolo === 'admin' || user?.ruolo === 'presidente';
 
   return (
     <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
@@ -39,8 +40,14 @@ const Navbar = () => {
             <>
               <li><NotificationBell /></li>
               <li><NavLink to="/profilo">{user.nome}</NavLink></li>
-              {(user.ruolo === 'admin' || user.ruolo === 'presidente') && (
-                <li><NavLink to="/admin">Admin</NavLink></li>
+              {isAdmin && (
+                <li className="navbar__dropdown-wrap">
+                  <span className="navbar__dropdown-trigger">Admin ▾</span>
+                  <ul className="navbar__dropdown">
+                    <li><NavLink to="/admin">👥 Gestione Membri</NavLink></li>
+                    <li><NavLink to="/admin/cms">📋 Gestione Contenuti</NavLink></li>
+                  </ul>
+                </li>
               )}
               <li><button className="navbar__cta" onClick={handleLogout}>Esci</button></li>
             </>
@@ -67,7 +74,11 @@ const Navbar = () => {
         {user ? (
           <>
             <NavLink to="/notifiche" onClick={() => setMenuOpen(false)}>🔔 Notifiche</NavLink>
-            <NavLink to="/profilo"   onClick={() => setMenuOpen(false)}>👤 Profilo</NavLink>
+            <NavLink to="/profilo" onClick={() => setMenuOpen(false)}>👤 Profilo</NavLink>
+            {isAdmin && <>
+              <NavLink to="/admin" onClick={() => setMenuOpen(false)}>👥 Gestione Membri</NavLink>
+              <NavLink to="/admin/cms" onClick={() => setMenuOpen(false)}>📋 Gestione Contenuti</NavLink>
+            </>}
             <button onClick={() => { handleLogout(); setMenuOpen(false); }}>Esci</button>
           </>
         ) : (
